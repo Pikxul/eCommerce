@@ -37,7 +37,7 @@ const Footer = () => {
       <div className='mt-10'>
         <hr />
         <p className='py-5 text-sm text-center'>
-          Copyright 2024 @ forever.com - All Rights Reserved.
+          Copyright 2024 @ pixkart.com - All Rights Reserved.
         </p>
       </div>
     </div>
