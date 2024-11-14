@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { Routes, Route } from "react-router-dom";
@@ -13,7 +13,11 @@ export const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 
 const App = () => {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):'');
+
+  useEffect(() =>{
+    localStorage.setItem('token',token)
+  },[token])
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -22,15 +26,15 @@ const App = () => {
         <Login setToken={setToken} />
        : 
         <>
-          <Navbar />
+          <Navbar setToken={setToken} />
           <hr />
           <div className="flex w-full">
             <Sidebar />
             <div className="w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base">
               <Routes>
-                <Route exact path="/add" element={<Add />} />
-                <Route exact path="/list" element={<List />} />
-                <Route exact path="/orders" element={<Orders />} />
+                <Route exact path="/add" element={<Add token={token} />} />
+                <Route exact path="/list" element={<List token={token} />} />
+                <Route exact path="/orders" element={<Orders token={token} />} />
               </Routes>
             </div>
           </div>
