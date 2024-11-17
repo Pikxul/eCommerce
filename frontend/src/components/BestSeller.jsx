@@ -36,4 +36,5 @@ const BestSeller = () => {
 export default BestSeller
 
 
-//the most selling update is bestseller.
+//the most selling update is bestseller   
+//.
