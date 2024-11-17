@@ -1,10 +1,11 @@
-import { v2 as cloudinary } from "cloudinary";
-import productModel from "../models/productModel.js";
+import { v2 as cloudinary } from "cloudinary"
+import productModel from "../models/productModel.js"
 
-// func for adding a product
+// function for add product
 const addProduct = async (req, res) => {
     try {
-        const { name, description, price, category, subCategory, sizes, bestseller } = req.body;
+
+        const { name, description, price, category, subCategory, sizes, bestseller } = req.body
 
         const image1 = req.files.image1 && req.files.image1[0]
         const image2 = req.files.image2 && req.files.image2[0]
@@ -15,7 +16,7 @@ const addProduct = async (req, res) => {
 
         let imagesUrl = await Promise.all(
             images.map(async (item) => {
-                let result = await cloudinary.uploader.upload(item.path,{resource_type:'image'});
+                let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
                 return result.secure_url
             })
         )
@@ -27,7 +28,7 @@ const addProduct = async (req, res) => {
             price: Number(price),
             subCategory,
             bestseller: bestseller === "true" ? true : false,
-            sizes: JSON.parse(sizes), 
+            sizes: JSON.parse(sizes),
             image: imagesUrl,
             date: Date.now()
         }
@@ -35,49 +36,54 @@ const addProduct = async (req, res) => {
         console.log(productData);
 
         const product = new productModel(productData);
-        await product.save();
+        await product.save()
 
-        res.json({ success: true, message: "Product added" });
+        res.json({ success: true, message: "Product Added" })
+
     } catch (error) {
-        console.error("Error adding product:", error); // Log the error for debugging
-        res.json({ success: false, message: error.message });
+        console.log(error)
+        res.json({ success: false, message: error.message })
     }
-};
+}
 
-// func for listing products
-const listProduct = async (req, res) => { 
-    
+// function for list product
+const listProducts = async (req, res) => {
     try {
+        
         const products = await productModel.find({});
-        res.json({ success: true, products })
+        res.json({success:true,products})
+
     } catch (error) {
-        console.error(error); // Log the error for debugging
-        res.json({ success: false, message: error.message });
+        console.log(error)
+        res.json({ success: false, message: error.message })
     }
+}
 
- };
-
-// func for removing a product
-const removeProduct = async (req, res) => { 
+// function for removing product
+const removeProduct = async (req, res) => {
     try {
+        
         await productModel.findByIdAndDelete(req.body.id)
-        res.json({ success: true, message: "Product removed" });
-    } catch (error) {
-        console.error(error); // Log the error for debugging
-        res.json({ success: false, message: error.message });
-    }
- };
+        res.json({success:true,message:"Product Removed"})
 
-// func for fetching single product info
-const singleProduct = async (req, res) => { 
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// function for single product info
+const singleProduct = async (req, res) => {
     try {
-        const {productId} = req.body
-        const product = await productModel.findById(productId);
-        res.json({ success: true, product })
-    } catch (error) {
-        console.error(error); // Log the error for debugging
-        res.json({ success: false, message: error.message });
-    }
- };
+        
+        const { productId } = req.body
+        const product = await productModel.findById(productId)
+        res.json({success:true,product})
 
-export { listProduct, addProduct, removeProduct, singleProduct };
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export { listProducts, addProduct, removeProduct, singleProduct }
